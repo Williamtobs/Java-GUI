@@ -26,7 +26,7 @@ public class IconSupport {
 		String[] iconNames = {"bell", "camera", "flower", "star", "check", "crossout", 
 				 "tux", "bomb", "keyboard","lightbulb", "tv"};
 		for (String name : iconNames) {
-			BufferedImage img = Util.getBufferedImageResource("C:\\Users\\HP\\eclipse-workspace\\GuiDemo\\src\\resources\\icons\\" + name + ".png");
+			BufferedImage img = Util.getBufferedImageResource("resources/icons/" + name + ".png");
 			if (img != null) {
 				iconImages.add(img);
 				actions.add(new SelectIconAction(name,iconImages.size()-1));
