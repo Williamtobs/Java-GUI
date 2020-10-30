@@ -43,14 +43,14 @@ public class GuiDemo extends JFrame{
 		
 		drawPanel = new DrawPanel();
 		drawPanel.getTextItem().setText(
-				"Big bugs have little bugs\n" +
-				"      Upon their backs to bite 'em,\n" +
-				"And little bugs have littler bugs,\n" +
-				"      And so it goes, ad infinitum."
+				"Any fool can write code that a computer\n" +
+				"can understand. Good programmers\n" +
+				"write code that humans can understand.\n" +
+				"                         Martin Fowler."
 			);
 		drawPanel.getTextItem().setFontSize(36);
 		drawPanel.getTextItem().setJustify(TextItem.LEFT);
-		drawPanel.setBackgroundImage(Util.getImageResource("resources/images/mandelbrot.jpeg"));
+		drawPanel.setBackgroundImage(Util.getImageResource("resources/images/eagle_nebula.jpeg"));
 		content.add(drawPanel, BorderLayout.CENTER);
 		
 		// Add an icon toolbar to the SOUTH position of the layout
@@ -154,7 +154,7 @@ public class GuiDemo extends JFrame{
 	}
 	
 	private AbstractAction newPictureAction = 
-		new AbstractAction("New", Util.iconFromResource("C:\\Users\\HP\\eclipse-workspace\\GuiDemo\\src\\resources\\action_icons\\fileopen.png")) {
+		new AbstractAction("New", Util.iconFromResource("resources/action_icons/fileopen.png")) {
 		    public void actionPerformed(ActionEvent evt) {
 		    	drawPanel.clear();
 		    	gradientOverlayCheckbox.setSelected(true);
@@ -163,14 +163,14 @@ public class GuiDemo extends JFrame{
 		};
 	
 	private AbstractAction quitAction = 
-		new AbstractAction("Quit", Util.iconFromResource("C:\\Users\\HP\\eclipse-workspace\\GuiDemo\\src\\resources\\action_icons\\exit.png")) {
+		new AbstractAction("Quit", Util.iconFromResource("resources/action_icons/exit.png")) {
 		    public void actionPerformed(ActionEvent evt) {
 		    	System.exit(0);
 		    }
 		};
 		
 	private AbstractAction saveImageAction = 
-		new AbstractAction("Save Image...", Util.iconFromResource("C:\\Users\\HP\\eclipse-workspace\\GuiDemo\\src\\resources\\action_icons\\filesave.png")) {
+		new AbstractAction("Save Image...", Util.iconFromResource("resources/action_icons/filesave.png")) {
 		    public void actionPerformed(ActionEvent evt) {
 		    	File f = fileChooser.getOutputFile(drawPanel, "Select Ouput File", "saying.jpeg");
 		    	if (f != null) {
@@ -211,12 +211,25 @@ public class GuiDemo extends JFrame{
     		this.text = text;
     		if (!text.equals("Custom...") && !text.equals("Color...")) {
     			putValue(Action.SMALL_ICON, 
-    					Util.iconFromResource("C:\\Users\\HP\\eclipse-workspace\\GuiDemo\\src\\resources\\images\\" + text.toLowerCase() + "_thumbnail.jpeg"));
+    					Util.iconFromResource("resources/images/" + text.toLowerCase() + "_thumbnail.jpeg"));
     		}
-    		if (text.equals("Color..."))
+    		if (text.equals("Color...")) {
     			putValue(Action.SHORT_DESCRIPTION, "<html>Use a solid color for background<br>instead of an image.</html>");
-    		else if (text.equals("Custom..."))
+    			BufferedImage colorIcon = new BufferedImage(32,32,BufferedImage.TYPE_INT_RGB);
+    			Graphics g = colorIcon.createGraphics();
+    			g.setColor(Color.RED);
+    			g.fillRect(0,0,32,32);
+    			g.setColor(Color.BLUE);
+    			g.fillRect(8, 8, 28, 28);
+    			g.dispose();
+				putValue(Action.SMALL_ICON, new ImageIcon(colorIcon));
+			
+    		}
+    		else if (text.equals("Custom...")) {
     			putValue(Action.SHORT_DESCRIPTION, "<html>Select an image file<br>to use as the background.</html>");
+    			putValue(Action.SMALL_ICON,
+    					Util.iconFromResource("resources/action_icons/fileopen.png"));
+    		}
     		else
     			putValue(Action.SHORT_DESCRIPTION, "Use this image as the background.");
     			
@@ -244,7 +257,7 @@ public class GuiDemo extends JFrame{
 				}
 			}
 			else {
-				Image bg = Util.getImageResource("C:\\Users\\HP\\eclipse-workspace\\GuiDemo\\src\\resources\\images\\" + text.toLowerCase() + ".jpeg");
+				Image bg = Util.getImageResource("resources/images/" + text.toLowerCase() + ".jpeg");
 				drawPanel.setBackgroundImage(bg);
 			}
 		}
