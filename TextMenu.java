@@ -15,6 +15,9 @@ public class TextMenu extends JMenu {
 	
 	private JCheckBoxMenuItem bold;   // controls whether the text is bold or not.
 	private JCheckBoxMenuItem italic; // controls whether the text is italic or not.
+	private JCheckBoxMenuItem left; // controls whether the text is left justify
+	private JCheckBoxMenuItem right; // controls whether the text is right justify
+	private JCheckBoxMenuItem center; // controls whether the text is center justify
 	
 	/**
 	 * Constructor creates all the menu commands and adds them to the menu.
@@ -52,6 +55,27 @@ public class TextMenu extends JMenu {
 				}
 			}
 		});
+		
+		final JMenuItem lineHeight = new JMenuItem("Set Line Height");
+		lineHeight.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				double currentHeight = panel.getTextItem().getLineHeightMultiplier();
+				String s = JOptionPane.showInputDialog(panel, "What height do you want to use?",currentHeight);
+				if (s != null && s.trim().length() > 0) {
+					try {
+						double newSize = Double.parseDouble(s.trim()); // can throw NumberFormatException
+						panel.getTextItem().setLineHeightMultiplier(newSize); // can throw IllegalArgumentException
+						panel.repaint();
+					}
+					catch (Exception e) {
+						JOptionPane.showMessageDialog(panel, s + " is not a legal text size.\n"
+								+"Please enter a positive integer.");
+					}
+				}
+			}
+		});
+		
+		
 		final JMenuItem color = new JMenuItem("Set Color...");
 		color.addActionListener( new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
@@ -80,9 +104,12 @@ public class TextMenu extends JMenu {
 		add(change);
 		addSeparator();
 		add(size);
+		add(lineHeight);
 		add(color);
 		add(italic);
 		add(bold);
+		addSeparator();
+		add(Justify());
 		addSeparator();
 		add(makeFontNameSubmenu());
 	}
@@ -97,8 +124,47 @@ public class TextMenu extends JMenu {
 	public void setDefaults() {
 		italic.setSelected(false);
 		bold.setSelected(false);
+		left.setSelected(false);
+		center.setSelected(false);
+		right.setSelected(false);
 	}
-	
+	private JMenu Justify() {
+		JMenu menu = new JMenu ("Justify");
+		left = new JCheckBoxMenuItem("left");
+		left.addActionListener( new ActionListener(){
+			public void actionPerformed(ActionEvent evt) {
+				panel.getTextItem().setJustify(TextItem.LEFT);
+				panel.repaint();
+			}
+		});
+		
+		center = new JCheckBoxMenuItem("center");
+		center.addActionListener( new ActionListener(){
+			public void actionPerformed(ActionEvent evt) {
+				panel.getTextItem().setJustify(TextItem.CENTER);
+				panel.repaint();
+			}
+		});
+		
+		right = new JCheckBoxMenuItem("center");
+		right.addActionListener( new ActionListener(){
+			public void actionPerformed(ActionEvent evt) {
+				panel.getTextItem().setJustify(TextItem.RIGHT);
+				panel.repaint();
+			}
+		});
+		menu.add(left);
+		menu.add(center);
+		menu.add(right);
+		return menu;
+	}
+		/**JMenuItem left = new JMenuItem("left");
+		menu.add(left);
+		JMenuItem center = new JMenuItem("center");
+		menu.add(center);
+		JMenuItem right = new JMenuItem("right");
+		menu.add(right);
+	}
 	/**
 	 * Create a menu containing a list of all available fonts.
 	 * (It turns out this can be very messy, at least on Linux, but
